@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int counter = 0;
+  int counter = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,7 @@ class _HomePageState extends State<HomePage> {
                   'To Do List',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
                   ),
                 ),
                 IconButton(
@@ -72,30 +71,34 @@ class _HomePageState extends State<HomePage> {
                     borderSide: BorderSide(color: Colors.transparent)),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: counter,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        title: RichText(
-                          text: TextSpan(
-                            text: 'title',
-                            children: [
-                              TextSpan(
-                                text: 'content',
-                              ),
-                            ],
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      text: 'Title\n',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'content\n',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
                           ),
                         ),
-                        subtitle: Text(''),
-                        trailing: Icon(Icons.delete),
-                      ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                  subtitle: Text(
+                    'date:2022/10/29',
+                    style: TextStyle(color: Colors.grey.shade800,),
+                  ),
+                  trailing: Icon(Icons.delete),
+                ),
               ),
             )
           ],
@@ -108,7 +111,10 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(builder: (context) => NewInputPage()),
           );
         },
-        icon: Icon(Icons.add,size: 40,),
+        icon: Icon(
+          Icons.add,
+          size: 40,
+        ),
       ),
     );
   }

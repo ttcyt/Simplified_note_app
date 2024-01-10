@@ -21,8 +21,7 @@ class _NewInputPageState extends State<NewInputPage> {
                 TextField(
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold),
+                      fontSize: 35,),
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: 'Title...',
