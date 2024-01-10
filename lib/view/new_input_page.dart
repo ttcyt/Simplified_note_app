@@ -8,6 +8,8 @@ class NewInputPage extends StatefulWidget {
 }
 
 class _NewInputPageState extends State<NewInputPage> {
+final TextEditingController titleController = TextEditingController();
+final TextEditingController contentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +21,7 @@ class _NewInputPageState extends State<NewInputPage> {
             Column(
               children: [
                 TextField(
+                  controller: titleController,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 35,),
@@ -32,6 +35,7 @@ class _NewInputPageState extends State<NewInputPage> {
                   ),
                 ),
                 TextField(
+                  controller: contentController,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -49,7 +53,7 @@ class _NewInputPageState extends State<NewInputPage> {
       ),
       floatingActionButton: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.pop(context,[titleController.text,contentController.text]);
         },
         icon: Icon(
           Icons.save,

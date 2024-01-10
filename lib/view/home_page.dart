@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simplified_note_app/view/new_input_page.dart';
-
+import 'package:simplified_note_app/model/note.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -9,8 +9,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int counter = 2;
-
+  List<Note> notes = [];
+  void deleteNote(int index){
+    setState(() {
+      Note note = notes[index];
+      notes.remove(note);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,45 +76,67 @@ class _HomePageState extends State<HomePage> {
                     borderSide: BorderSide(color: Colors.transparent)),
               ),
             ),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: RichText(
-                    text: TextSpan(
-                      text: 'Title\n',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: 'content\n',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
+            Expanded(
+              child: ListView.builder(
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: RichText(
+                          text: TextSpan(
+                            text: '${notes[index].title}\n',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '${notes[index].content}\n',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                        subtitle: Text(
+                          '${notes[index].date}',
+                          style: TextStyle(
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: (){
+                            deleteNote(index);
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  subtitle: Text(
-                    'date:2022/10/29',
-                    style: TextStyle(color: Colors.grey.shade800,),
-                  ),
-                  trailing: Icon(Icons.delete),
-                ),
+                  );
+                },
               ),
-            )
+            ),
+
           ],
         ),
       ),
       floatingActionButton: IconButton(
-        onPressed: () {
+        onPressed: () async{
+          final result = await
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewInputPage()),
           );
+          if(result!=null){
+            setState(() {
+              notes.add(Note(id: notes.length, title: result[0], content: result[1], date: DateTime.now()));
+            });
+
+          }
         },
         icon: Icon(
           Icons.add,
