@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simplified_note_app/view/new_input_page.dart';
 import 'package:simplified_note_app/model/note.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,12 +11,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Note> notes = [];
-  void deleteNote(int index){
+  List<Note> searchNotes = [];
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchNotes = notes;
+  }
+  void deleteNote(int index) {
     setState(() {
       Note note = notes[index];
-      notes.remove(note);
+      searchNotes.remove(note);
     });
   }
+
+  void searchNote(String searchText) {
+    setState(() {
+      searchNotes = notes
+          .where((note) =>
+              note.content.toLowerCase().contains(searchText.toLowerCase()) ||
+              note.title.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +69,9 @@ class _HomePageState extends State<HomePage> {
               height: 10,
             ),
             TextField(
+              onChanged: (String searchText) {
+                searchNote(searchText);
+              },
               style: TextStyle(
                 fontSize: 25,
                 color: Colors.white60,
@@ -78,7 +100,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: notes.length,
+                itemCount: searchNotes.length,
                 itemBuilder: (context, index) {
                   return Card(
                     child: Padding(
@@ -86,14 +108,14 @@ class _HomePageState extends State<HomePage> {
                       child: ListTile(
                         title: RichText(
                           text: TextSpan(
-                            text: '${notes[index].title}\n',
+                            text: '${searchNotes[index].title}\n',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 30,
                             ),
                             children: [
                               TextSpan(
-                                text: '${notes[index].content}\n',
+                                text: '${searchNotes[index].content}\n',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -103,14 +125,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         subtitle: Text(
-                          '${notes[index].date}',
+                          '${searchNotes[index].date}',
                           style: TextStyle(
                             color: Colors.grey.shade800,
                           ),
                         ),
                         trailing: IconButton(
                           icon: Icon(Icons.delete),
-                          onPressed: (){
+                          onPressed: () {
                             deleteNote(index);
                           },
                         ),
@@ -120,22 +142,23 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-
           ],
         ),
       ),
       floatingActionButton: IconButton(
-        onPressed: () async{
-          final result = await
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewInputPage()),
           );
-          if(result!=null){
+          if (result != null) {
             setState(() {
-              notes.add(Note(id: notes.length, title: result[0], content: result[1], date: DateTime.now()));
+              notes.add(Note(
+                  id: notes.length,
+                  title: result[0],
+                  content: result[1],
+                  date: DateTime.now()));
             });
-
           }
         },
         icon: Icon(
